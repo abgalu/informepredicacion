@@ -1,0 +1,26 @@
+:root {
+  --background-color: #ffffff;
+  --color: #000000de;
+}
+
+[data-theme="dark"] {
+  --background-color: #242424;
+  --color: #fff;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--color);
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  padding:
+    env(safe-area-inset-top)
+    env(safe-area-inset-right)
+    env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+}
+
+* {
+  box-sizing: border-box;
+}

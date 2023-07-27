@@ -1,0 +1,27 @@
+.action {
+  margin-top: 1em;
+}
+
+.activity {
+  width: min-content;
+}
+
+.container {
+  border-radius: 10px;
+  box-shadow: #90caf9 0px 7px 29px 0px;
+  margin-bottom: 1em;
+  padding: 1.5em;
+  width: 100%;
+}
+
+.displayTime {
+  font-weight: bold;
+}
+
+.row {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 0.5em;
+  justify-content: center;
+}

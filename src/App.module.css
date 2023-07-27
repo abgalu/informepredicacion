@@ -1,0 +1,11 @@
+.main {
+  padding: 3em 2em;
+  text-align: center;
+}
+
+@media (min-width: 481px) {
+  .main {
+    margin: auto;
+    max-width: 50vw;
+  }
+}

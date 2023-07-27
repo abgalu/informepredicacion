@@ -1,0 +1,7 @@
+.container {
+  bottom: calc(1em + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  position: fixed !important;
+  right: calc(1em + env(safe-area-inset-right));
+}
