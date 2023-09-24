@@ -1,8 +1,8 @@
 {
-  "name": "informepredicacion-ui",
+  "name": "contador",
   "private": true,
   "version": "1.0.0",
-  "description": "InformePredicacion is a simple application to report the activity",
+  "description": "Contador is a simple application to report the activity",
   "type": "module",
   "author": "abgalu",
   "license": "ISC",
@@ -23,6 +23,7 @@
     "dayjs": "^1.11.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-timer-hook": "^3.0.7",
     "zustand": "^4.3.8"
   },
   "devDependencies": {

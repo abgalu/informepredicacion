@@ -10,10 +10,10 @@ const manifestForPlugin = {
     'react.svg'
   ],
   manifest: {
-    name: 'InformePredicacion',
-    short_name: 'InformePredicacion',
-    description: 'InformePredicacion is a simple application to report the activity',
-    theme_color: '#1976d2',
+    name: 'Contador',
+    short_name: 'Contador',
+    description: 'Contador is a simple application to report the activity',
+    theme_color: '#5d5d5d',
     start_url: '/',
     icons: [
       {

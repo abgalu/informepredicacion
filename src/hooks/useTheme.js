@@ -1,5 +1,6 @@
-import { useEffect, useMemo } from 'react'
 import { createTheme } from '@mui/material/styles'
+import { esES } from '@mui/x-date-pickers/locales'
+import { useEffect, useMemo } from 'react'
 
 import {
   DARK,
@@ -13,25 +14,6 @@ import { useStore } from '../store/useStore'
 export const useTheme = () => {
   const { mode, updateMode } = useStore()
 
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode
-        }
-      }),
-    [mode]
-  )
-
-  const setMode = (value) => {
-    document.documentElement.setAttribute(DATA_THEME, value)
-    window.localStorage.setItem(THEME, value)
-    updateMode(value)
-  }
-
-  const toggleTheme = (event) =>
-    setMode(event.target.checked ? DARK : LIGHT)
-
   useEffect(() => {
     const storedTheme = window.localStorage.getItem(THEME)
     const prefersDark =
@@ -41,10 +23,45 @@ export const useTheme = () => {
     setMode(defaultDark ? DARK : LIGHT)
   }, [])
 
-  const checked = useMemo(() => mode === DARK, [mode])
+  const theme = useMemo(
+    () =>
+      createTheme(
+        {
+          components: {
+            MuiDateCalendar: {
+              styleOverrides: {
+                root: {
+                  height: 'min-content'
+                }
+              }
+            },
+            MuiPickersCalendarHeader: {
+              styleOverrides: {
+                root: {
+                  display: 'none'
+                }
+              }
+            }
+          },
+          palette: {
+            mode
+          }
+        },
+        esES
+      ),
+    [mode]
+  )
+
+  const setMode = (value) => {
+    document.documentElement.setAttribute(DATA_THEME, value)
+    window.localStorage.setItem(THEME, value)
+    updateMode(value)
+  }
+
+  const toggleTheme = () =>
+    setMode(mode === DARK ? LIGHT : DARK)
 
   return {
-    checked,
     theme,
     toggleTheme
   }

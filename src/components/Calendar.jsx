@@ -1,52 +1,55 @@
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import PropTypes from 'prop-types'
+import { useEffect } from 'react'
+import dayjs from 'dayjs'
 
+import {
+  DEFAULT_VALUES,
+  DICTIONARY
+} from '../shared/constants'
+import { getIdData } from '../shared/helpers'
+import { useStore } from '../store/useStore'
 import Day from './Day'
-import { VIEWS } from '../shared/constants'
 
-const Calendar = ({
-  handleChangeDay,
-  handleChangeMonth,
-  handleChangeView,
-  highlightedDays,
-  isCurrentMonth
-}) => (
-  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='es'>
-    <DateCalendar
-      onChange={handleChangeDay}
-      onMonthChange={handleChangeMonth}
-      onYearChange={handleChangeMonth}
-      onViewChange={handleChangeView}
-      slotProps={{
-        day: {
-          highlightedDays,
-          isCurrentMonth
+const Calendar = () => {
+  const {
+    isLoading,
+    selectedMonth,
+    selectedYear,
+    updateSelectedMonthActivity,
+    userActivity
+  } = useStore()
+
+  useEffect(() => {
+    if (userActivity) {
+      const monthActivity = userActivity?.find(
+        (item) => {
+          const { month, year } = getIdData(item.id)
+          return month === selectedMonth && year === selectedYear
         }
-      }}
-      slots={{
-        day: Day
-      }}
-      views={VIEWS}
-    />
-  </LocalizationProvider>
-)
+      ) ?? DEFAULT_VALUES.MONTH_ACTIVITY
+      updateSelectedMonthActivity(monthActivity)
+    }
+  }, [userActivity, selectedMonth, selectedYear])
 
-Calendar.defaultProps = {
-  handleChangeDay: () => {},
-  handleChangeMonth: () => {},
-  handleChangeView: () => {},
-  highlightedDays: [],
-  isCurrentMonth: true
-}
-
-Calendar.propTypes = {
-  handleChangeDay: PropTypes.func,
-  handleChangeMonth: PropTypes.func,
-  handleChangeView: PropTypes.func,
-  highlightedDays: PropTypes.array,
-  isCurrentMonth: PropTypes.bool
+  return (
+    <div>
+      {isLoading
+        ? <p>{DICTIONARY.LOADING}...</p>
+        : (
+          <LocalizationProvider adapterLocale='es' dateAdapter={AdapterDayjs}>
+            <DateCalendar
+              defaultCalendarMonth={dayjs(`${selectedYear}-${selectedMonth + 1}`)}
+              readOnly
+              slots={{
+                day: Day
+              }}
+            />
+          </LocalizationProvider>
+          )}
+    </div>
+  )
 }
 
 export default Calendar

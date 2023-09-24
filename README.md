@@ -1,3 +1,3 @@
-# InformePredicacion
+# Contador
 
-InformePredicacion is a simple application to report the activity
+Contador is a simple application to report the activity

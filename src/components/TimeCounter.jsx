@@ -1,101 +1,81 @@
-import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import AddRoundedIcon from '@mui/icons-material/AddRounded'
-import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded'
+import { MenuItem } from '@mui/material'
+import InputLabel from '@mui/material/InputLabel'
 import PropTypes from 'prop-types'
+import Select from '@mui/material/Select'
 
-import { useTimeCounter } from '../hooks/useTimeCounter'
 import {
-  CONTAINED,
-  DAY,
-  dictionary,
-  ERROR,
+  ACTIVITY_DIALOG_TYPE,
+  DICTIONARY,
   HOURS,
-  LARGE,
-  MINUTES,
-  PRIMARY,
-  START_CHRONOMETER,
-  START_TIME, STOP_CHRONOMETER
+  MINUTES
 } from '../shared/constants'
+import { getOptions, padTo2Digits } from '../shared/helpers'
+import { useStore } from '../store/useStore'
 import styles from '../styles/TimeCounter.module.css'
 
-const TimeCounter = ({ activityItem, isToday, readOnlyMode, type }) => {
+const TimeCounter = ({ currentActivity, readOnlyMode, setCurrentActivity }) => {
   const {
-    displayTime,
-    handleLessTime,
-    handleMoreTime,
-    isStarted,
-    startChronometer,
-    startTime,
-    stopChronometer
-  } = useTimeCounter(isToday, type)
+    activityDialogType,
+    isCurrentMonth
+  } = useStore()
+
+  const handleChange = (event, type) =>
+    setCurrentActivity(prevState =>
+      ({ ...prevState, [type]: event.target.value })
+    )
 
   return (
-    <div className={type === DAY ? styles.container : ''}>
-      <div>
-        {readOnlyMode
-          ? (
-            <div className={styles.row}>
-              <span className={styles.activity}>{dictionary[activityItem]}</span>
-              <span className={styles.displayTime}>{displayTime}</span>
+    <div className={styles.container}>
+      {readOnlyMode
+        ? (
+          <span>
+            {DICTIONARY.HOURS} <span className={styles.display}>{currentActivity.hours}:{padTo2Digits(currentActivity.minutes)}</span>
+          </span>
+          )
+        : (
+          <>
+            <div>
+              <InputLabel id={HOURS}>{DICTIONARY.HOURS}</InputLabel>
+              <Select
+                disabled={activityDialogType === ACTIVITY_DIALOG_TYPE.DAY && !isCurrentMonth}
+                labelId={HOURS}
+                onChange={(event) => handleChange(event, HOURS)}
+                value={currentActivity.hours}
+              >
+                {getOptions(0, 99).map((option) => (
+                  <MenuItem key={option} value={option}>{option}</MenuItem>
+                ))}
+              </Select>
             </div>
-            )
-          : isStarted
-            ? (
-              <span>{START_TIME} {startTime.display}</span>
-              )
-            : (
-              <div className={styles.row}>
-                <span className={styles.activity}>{dictionary[activityItem]}</span>
-                <div>
-                  <div>
-                    <IconButton onClick={() => handleMoreTime(HOURS)}>
-                      <AddRoundedIcon fontSize={LARGE} />
-                    </IconButton>
-                    <IconButton onClick={() => handleMoreTime(MINUTES)}>
-                      <AddRoundedIcon fontSize={LARGE} />
-                    </IconButton>
-                  </div>
-                  <span className={styles.displayTime}>{displayTime}</span>
-                  <div>
-                    <IconButton onClick={() => handleLessTime(HOURS)}>
-                      <RemoveRoundedIcon fontSize={LARGE} />
-                    </IconButton>
-                    <IconButton onClick={() => handleLessTime(MINUTES)}>
-                      <RemoveRoundedIcon fontSize={LARGE} />
-                    </IconButton>
-                  </div>
-                </div>
-              </div>
-              )}
-      </div>
-      {isToday && (
-        <div className={styles.action}>
-          <Button
-            color={isStarted ? ERROR : PRIMARY}
-            onClick={isStarted ? stopChronometer : startChronometer}
-            variant={CONTAINED}
-          >
-            {isStarted ? STOP_CHRONOMETER : START_CHRONOMETER}
-          </Button>
-        </div>
-      )}
+            <div>
+              <InputLabel id={MINUTES}>{DICTIONARY.MINUTES}</InputLabel>
+              <Select
+                disabled={activityDialogType === ACTIVITY_DIALOG_TYPE.DAY && !isCurrentMonth}
+                labelId={MINUTES}
+                onChange={(event) => handleChange(event, MINUTES)}
+                value={currentActivity.minutes}
+              >
+                {getOptions(0, 59).map((option) => (
+                  <MenuItem key={option} value={option}>{padTo2Digits(option)}</MenuItem>
+                ))}
+              </Select>
+            </div>
+          </>
+          )}
     </div>
   )
 }
 
 TimeCounter.defaultProps = {
-  activityItem: '',
-  isToday: false,
+  currentActivity: {},
   readOnlyMode: false,
-  type: ''
+  setCurrentActivity: () => {}
 }
 
 TimeCounter.propTypes = {
-  activityItem: PropTypes.string,
-  isToday: PropTypes.bool,
+  currentActivity: PropTypes.object,
   readOnlyMode: PropTypes.bool,
-  type: PropTypes.string
+  setCurrentActivity: PropTypes.func
 }
 
 export default TimeCounter

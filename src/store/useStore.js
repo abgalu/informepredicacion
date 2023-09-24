@@ -4,17 +4,31 @@ import { DEFAULT_VALUES, LIGHT } from '../shared/constants'
 
 export const useStore = create((set) => {
   return {
+    activityDialogType: null,
+    isCurrentMonth: true,
+    isLoading: false,
     mode: LIGHT,
+    selectedDate: null,
     selectedDayActivity: DEFAULT_VALUES.DAY_ACTIVITY,
+    selectedMonth: DEFAULT_VALUES.MONTH,
     selectedMonthActivity: DEFAULT_VALUES.MONTH_ACTIVITY,
-    resetSelectedDayActivity: () => {
+    selectedYear: DEFAULT_VALUES.YEAR,
+    showActivityDialog: false,
+    showStopWatchDialog: false,
+    userActivity: null,
+    updateIsLoading: (value) => {
       set(() => ({
-        selectedDayActivity: DEFAULT_VALUES.DAY_ACTIVITY
+        isLoading: value
       }))
     },
     updateMode: (value) => {
       set(() => ({
         mode: value
+      }))
+    },
+    updateSelectedDate: (value) => {
+      set(() => ({
+        selectedDate: value
       }))
     },
     updateSelectedDayActivity: (value, key) => {
@@ -27,6 +41,15 @@ export const useStore = create((set) => {
           : value
       }))
     },
+    updateSelectedMonth: (value) => {
+      setTimeout(
+        () => set((store) => ({
+          isCurrentMonth: value === DEFAULT_VALUES.MONTH && store.selectedYear === DEFAULT_VALUES.YEAR,
+          isLoading: false,
+          selectedMonth: value
+        }))
+      )
+    },
     updateSelectedMonthActivity: (value, key) => {
       set((store) => ({
         selectedMonthActivity: key
@@ -35,6 +58,31 @@ export const useStore = create((set) => {
               [key]: value
             }
           : value
+      }))
+    },
+    updateSelectedYear: (value) => {
+      setTimeout(
+        () => set((store) => ({
+          isCurrentMonth: value === DEFAULT_VALUES.YEAR && store.selectedMonth === DEFAULT_VALUES.MONTH,
+          isLoading: false,
+          selectedYear: value
+        }))
+      )
+    },
+    updateShowActivityDialog: (type) => {
+      set((store) => ({
+        showActivityDialog: !store.showActivityDialog,
+        activityDialogType: type
+      }))
+    },
+    updateShowStopWatchDialog: () => {
+      set((store) => ({
+        showStopWatchDialog: !store.showStopWatchDialog
+      }))
+    },
+    updateUserActivity: (value) => {
+      set(() => ({
+        userActivity: value
       }))
     }
   }
