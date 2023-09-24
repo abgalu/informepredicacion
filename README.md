@@ -1,3 +1,3 @@
-# InformePredicacion
+# informepredicacion.web.app
 
-InformePredicacion is a simple application to report the activity
+informepredicacion.web.app is a simple application to report the activity

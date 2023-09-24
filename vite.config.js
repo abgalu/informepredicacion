@@ -10,9 +10,9 @@ const manifestForPlugin = {
     'react.svg'
   ],
   manifest: {
-    name: 'InformePredicacion',
-    short_name: 'InformePredicacion',
-    description: 'InformePredicacion is a simple application to report the activity',
+    name: 'informepredicacion.web.app',
+    short_name: 'informepredicacion.web.app',
+    description: 'informepredicacion.web.app is a simple application to report the activity',
     theme_color: '#1976d2',
     start_url: '/',
     icons: [

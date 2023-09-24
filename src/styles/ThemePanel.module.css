@@ -1,7 +1,5 @@
 .container {
   align-items: center;
   display: flex;
-  position: absolute;
-  right: calc(2em + env(safe-area-inset-right));
-  top: calc(1em + env(safe-area-inset-top));
+  justify-content: center;
 }

@@ -1,8 +1,8 @@
 {
-  "name": "informepredicacion-ui",
+  "name": "informepredicacion.web.app",
   "private": true,
-  "version": "1.0.0",
-  "description": "InformePredicacion is a simple application to report the activity",
+  "version": "2.0.0",
+  "description": "informepredicacion.web.app is a simple application to report the activity",
   "type": "module",
   "author": "abgalu",
   "license": "ISC",

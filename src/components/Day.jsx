@@ -4,9 +4,10 @@ import PropTypes from 'prop-types'
 import { LIGHT } from '../shared/constants'
 import { useStore } from '../store/useStore'
 
-const Day = ({ day, highlightedDays, isCurrentMonth, ...other }) => {
+const Day = ({ day, highlightedDays, ...other }) => {
+  const { isCurrentMonth, mode } = useStore()
+
   const isHighlightedDay = highlightedDays?.includes(day.date())
-  const { mode } = useStore()
 
   return (
     <PickersDay
@@ -30,14 +31,12 @@ const Day = ({ day, highlightedDays, isCurrentMonth, ...other }) => {
 
 Day.defaultProps = {
   day: {},
-  highlightedDays: [],
-  isCurrentMonth: true
+  highlightedDays: []
 }
 
 Day.propTypes = {
   day: PropTypes.object,
-  highlightedDays: PropTypes.array,
-  isCurrentMonth: PropTypes.bool
+  highlightedDays: PropTypes.array
 }
 
 export default Day

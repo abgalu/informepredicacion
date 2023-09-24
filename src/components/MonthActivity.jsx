@@ -1,31 +1,24 @@
-import PropTypes from 'prop-types'
 import { Button } from '@mui/material'
 
-import MonthActivityRow from './MonthActivityRow'
-import { MONTH_ACTIVITY_ITEMS, CONTAINED, EDIT_MONTH_ACTIVITY } from '../shared/constants'
+import { BIBLE_STUDIES, CONTAINED, EDIT_MONTH_ACTIVITY, MONTH } from '../shared/constants'
 import { useStore } from '../store/useStore'
 import styles from '../styles/MonthActivity.module.css'
+import Counter from './Counter'
+import TimeCounter from './TimeCounter'
 
-const MonthActivity = ({
-  editionMode,
-  isCurrentMonth,
-  setIsMonthEditionMode
-}) => {
-  const { selectedMonthActivity } = useStore()
+const MonthActivity = () => {
+  const { isCurrentMonth, updateShowActivityDialog } = useStore()
 
   return (
     <div className={styles.container}>
-      {MONTH_ACTIVITY_ITEMS.map((activityItem) => (
-        <MonthActivityRow
-          activityItem={activityItem}
-          editionMode={editionMode}
-          key={activityItem}
-          selectedMonthActivity={selectedMonthActivity}
-        />
-      ))}
-      {!editionMode && !isCurrentMonth && (
+      <TimeCounter readOnlyMode />
+      <Counter
+        name={BIBLE_STUDIES}
+        readOnlyMode
+      />
+      {!isCurrentMonth && (
         <Button
-          onClick={() => setIsMonthEditionMode(true)}
+          onClick={() => updateShowActivityDialog(MONTH)}
           variant={CONTAINED}
         >
           {EDIT_MONTH_ACTIVITY}
@@ -33,18 +26,6 @@ const MonthActivity = ({
       )}
     </div>
   )
-}
-
-MonthActivity.defaultProps = {
-  editionMode: false,
-  isCurrentMonth: true,
-  setIsMonthEditionMode: () => {}
-}
-
-MonthActivity.propTypes = {
-  editionMode: PropTypes.bool,
-  isCurrentMonth: PropTypes.bool,
-  setIsMonthEditionMode: PropTypes.func
 }
 
 export default MonthActivity

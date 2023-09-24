@@ -1,34 +1,34 @@
-import IconButton from '@mui/material/IconButton'
-import AddRoundedIcon from '@mui/icons-material/AddRounded'
-import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded'
 import PropTypes from 'prop-types'
+import Select from '@mui/material/Select'
+import InputLabel from '@mui/material/InputLabel'
 
-import { useCounter } from '../hooks/useCounter'
-import { dictionary, LARGE } from '../shared/constants'
+import { DICTIONARY } from '../shared/constants'
 import styles from '../styles/Counter.module.css'
+import { useStore } from '../store/useStore'
+import { getOptions } from '../shared/helpers'
+import { MenuItem } from '@mui/material'
 
-const Counter = ({ activityItem, readOnlyMode, type }) => {
-  const {
-    count,
-    handleLess,
-    handleMore
-  } = useCounter(activityItem, type)
+const Counter = ({ name, readOnlyMode }) => {
+  const { selectedMonthActivity, updateSelectedMonthActivity } = useStore()
 
   return (
-    <div className={styles.container}>
-      <span className={styles.label}>{dictionary[activityItem]}</span>
+    <div className={!readOnlyMode ? styles.container : undefined}>
+      <span>{DICTIONARY[name.toUpperCase()]}</span>
       {
         readOnlyMode
-          ? <span className={styles.count}>{count}</span>
+          ? <span className={styles.count}> {selectedMonthActivity[name]}</span>
           : (
-            <div>
-              <IconButton onClick={handleLess}>
-                <RemoveRoundedIcon fontSize={LARGE} />
-              </IconButton>
-              <span className={styles.count}>{count}</span>
-              <IconButton onClick={handleMore}>
-                <AddRoundedIcon fontSize={LARGE} />
-              </IconButton>
+            <div className={styles.countBox}>
+              <InputLabel id={name}>{DICTIONARY[name]}</InputLabel>
+              <Select
+                value={selectedMonthActivity[name]}
+                labelId={name}
+                onChange={(event) => updateSelectedMonthActivity(event.target.value, name)}
+              >
+                {getOptions(0, 99).map((option) => (
+                  <MenuItem key={option} value={option}>{option}</MenuItem>
+                ))}
+              </Select>
             </div>
             )
       }
@@ -37,15 +37,13 @@ const Counter = ({ activityItem, readOnlyMode, type }) => {
 }
 
 Counter.defaultProps = {
-  activityItem: '',
-  readOnlyMode: false,
-  type: ''
+  name: '',
+  readOnlyMode: false
 }
 
 Counter.propTypes = {
-  activityItem: PropTypes.string,
-  readOnlyMode: PropTypes.bool,
-  type: PropTypes.string
+  name: PropTypes.string,
+  readOnlyMode: PropTypes.bool
 }
 
 export default Counter

@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react'
 
-import { INDEXEDDB_ERROR, KEY_PATH, READ_ONLY, READ_WRITE } from '../shared/constants'
+import { DB_NAME, INDEXEDDB_ERROR, KEY_PATH, READ_ONLY, READ_WRITE, STORE_NAME } from '../shared/constants'
 import { hasActivity } from '../shared/helpers'
+import { useStore } from '../store/useStore'
 
-export const useIndexedDB = (dbName, storeName) => {
+export const useIndexedDB = () => {
   const [db, setDB] = useState(null)
   const [fetchData, setFetchData] = useState(true)
-  const [indexedDBActivity, setIndexedDBActivity] = useState([])
+  const { updateUserActivity } = useStore()
 
   useEffect(() => {
-    const openDB = window.indexedDB.open(dbName, 1)
+    const openDB = window.indexedDB.open(DB_NAME, 1)
 
     openDB.onupgradeneeded = event => {
       const db = event.target.result
-      db.createObjectStore(storeName, { keyPath: KEY_PATH })
+      db.createObjectStore(STORE_NAME, { keyPath: KEY_PATH })
     }
 
     openDB.onsuccess = event => {
@@ -23,14 +24,14 @@ export const useIndexedDB = (dbName, storeName) => {
     openDB.onerror = event => {
       console.error(INDEXEDDB_ERROR, event.target.error)
     }
-  }, [dbName, storeName])
+  }, [DB_NAME, STORE_NAME])
 
   useEffect(() => {
     const getAllRecords = async () => {
       return new Promise((resolve, reject) => {
         if (db) {
-          const transaction = db.transaction([storeName], READ_ONLY)
-          const objectStore = transaction.objectStore(storeName)
+          const transaction = db.transaction([STORE_NAME], READ_ONLY)
+          const objectStore = transaction.objectStore(STORE_NAME)
           const response = objectStore.getAll()
 
           transaction.oncomplete = () => {
@@ -46,7 +47,7 @@ export const useIndexedDB = (dbName, storeName) => {
 
     const getIndexedDBActivity = async () => {
       const records = await getAllRecords()
-      setIndexedDBActivity(records)
+      updateUserActivity(records)
       setFetchData(false)
     }
 
@@ -57,8 +58,8 @@ export const useIndexedDB = (dbName, storeName) => {
 
   const deleteRecord = async (record) => {
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction([storeName], READ_WRITE)
-      const objectStore = transaction.objectStore(storeName)
+      const transaction = db.transaction([STORE_NAME], READ_WRITE)
+      const objectStore = transaction.objectStore(STORE_NAME)
       const response = objectStore.delete(record)
 
       transaction.oncomplete = () => {
@@ -74,8 +75,8 @@ export const useIndexedDB = (dbName, storeName) => {
 
   const putRecord = async (record) => {
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction([storeName], READ_WRITE)
-      const objectStore = transaction.objectStore(storeName)
+      const transaction = db.transaction([STORE_NAME], READ_WRITE)
+      const objectStore = transaction.objectStore(STORE_NAME)
       const response = objectStore.put(record)
 
       transaction.oncomplete = () => {
@@ -93,14 +94,13 @@ export const useIndexedDB = (dbName, storeName) => {
     const monthHasActivity = hasActivity(monthActivity)
 
     if (!monthHasActivity) {
-      await deleteRecord(monthActivity.month)
+      await deleteRecord(`${monthActivity.month}_${monthActivity.year}`)
     } else {
       await putRecord(monthActivity)
     }
   }
 
   return {
-    indexedDBActivity,
     updateIndexedDBActivity
   }
 }

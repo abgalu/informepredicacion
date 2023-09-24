@@ -1,7 +1,15 @@
 .container {
-  bottom: calc(1em + env(safe-area-inset-bottom));
+  bottom: 2em;
   display: flex;
   flex-direction: column;
   position: fixed !important;
   right: calc(1em + env(safe-area-inset-right));
+}
+
+.dark {
+  background-color: #242424;
+}
+
+.light {
+  background-color: #fff;
 }
